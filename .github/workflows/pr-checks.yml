@@ -1,0 +1,22 @@
+# Runs on every pull request. Plain-words explanation is at the top of .github/scripts/pr_checks.py.
+name: Pull request checks
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Secrets, file sizes, links, rulebook changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run the checks
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python3 .github/scripts/pr_checks.py
